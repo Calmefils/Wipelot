@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "simulator.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node simulator.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "websocket": "^1.0.34",
+    "ws": "^8.4.0"
+  }
 }

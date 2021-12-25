@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "listener.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node listener.js"
+    "start": "nodemon listener.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "ws": "^8.4.0"
+  }
 }
