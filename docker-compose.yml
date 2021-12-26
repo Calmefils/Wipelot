@@ -1,0 +1,36 @@
+version: '0.1'
+services:
+  rabbit:
+    image: 'rabbitmq:3.8-management'
+    ports:
+      - '15672:15672'
+    restart: on-failure
+    healthcheck:
+      timeout: 5s
+      interval: 5s
+      retries: 5
+      test:
+        - 'CMD'
+        - 'rabbitmqctl'
+        - 'status'
+  listener:
+    build: ./listener
+    restart: on-failure
+  #    depends_on:
+  #      rabbit:
+  #        condition: service_healthy
+  simulator:
+    build: ./simulator
+    environment:
+      - CLIENTNUMBER=1
+    restart: on-failure
+  #    depends_on:
+  #      rabbit:
+  #        condition: service_healthy
+  #      listener:
+  #        condition: service_healthy
+  userinterface:
+    build: ./userinterface
+    ports:
+      - '3000:3000'
+    restart: on-failure

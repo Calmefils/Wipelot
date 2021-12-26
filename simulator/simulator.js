@@ -1,74 +1,82 @@
 #!/usr/bin/env node
-
-import readline from 'readline'
+import dotenv from 'dotenv'
 import WebSocket from 'ws'
 
+dotenv.config({ path: '.env' })
+
+const socketAddress = 'ws://localhost:7000'
 var clientNumber
 var connections = []
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-})
+const heartbeat = (ws) => {
+  clearTimeout(ws.pingTimeout)
 
-rl.prompt()
-console.log('Resquest Client Number')
+  // Use `WebSocket#terminate()`, which immediately destroys the connection,
+  // instead of `WebSocket#close()`, which waits for the close timer.
+  // Delay should be equal to the interval at which your server
+  // sends out pings plus a conservative assumption of the latency.
+  ws.pingTimeout = setTimeout(() => {
+    ws.terminate()
+  }, 5000 + 1000)
+}
 
-rl.on('line', function (cmd) {
-  console.log(typeof cmd, cmd, !isNaN(cmd))
-  if (!isNaN(cmd)) {
-    clientNumber = Number(cmd)
-  }
-  for (let i = 0; i < clientNumber; i++) {
-    let conn = createNewConnection(i)
-    //console.log(conn)
-    connections.push(conn)
-  }
-  rl.close()
-})
-
-const createNewConnection = (index) => {
-  console.log(`${index}. connection is creating`)
-  const ws = new WebSocket('ws://127.0.0.1:8080')
-
-  ws.on('open', function open() {
-    let timer = 0
-    let firstValue = 10 //Math.random() * 2998 + 1
+const createNewConnection = (index, lastSent) => {
+  const ws = new WebSocket(socketAddress)
+  let interval
+  let toSend
+  ws.on('open', () => {
+    heartbeat(ws)
+    let timer = lastSent === null ? 0 : lastSent.timestamp
+    let firstValue =
+      lastSent === null ? Math.random() * 2998 + 1 : lastSent.value
     let lastValue = firstValue
-    setInterval(() => {
-      //let newValue = timer !== 0 ? calculateNewValue(lastValue) : firstValue
+    interval = setInterval(() => {
       let newValue = Math.random() * 200 - 100 + lastValue
       if (newValue > 2999) newValue = 2999
       if (newValue < 1) newValue = 1
-      let toSend = {
+      toSend = {
         socketUniqueNumber: index,
-        timestamp: timer,
-        value: newValue,
-        lastValue: lastValue,
-        //value: timer === 0 ? parseFloat(firstValue).toFixed(0) : newValue,
+        timestamp: lastSent === null ? timer : timer + 1,
+        value: Number(parseFloat(newValue).toFixed(0)),
       }
       lastValue = newValue
       timer++
-      console.log(toSend)
       ws.send(JSON.stringify(toSend))
     }, 1000)
   })
 
-  ws.on('message', function message(data) {
+  ws.on('message', (data) => {
     console.log('received: %s', data)
+  })
+
+  ws.on('ping', () => {
+    heartbeat(ws)
+  })
+
+  ws.on('close', () => {
+    clearInterval(interval)
+    console.log(`Index: ${index} connection closed`)
+    createNewConnection(index, toSend)
+    console.log(`Index: ${index} connection reopened`)
+  })
+
+  ws.on('error', (err) => {
+    console.log(err)
   })
 
   return ws
 }
 
-const calculateNewValue = (lastValue) => {
-  // -100<= newValue <= +100 arasında kalması için
-  let temp = Math.random() * 200 - 100
-  let value = temp + lastValue
-  console.log('lastValue:', lastValue, 'newValue:', value, 'temp: ', temp)
-  /*   while (value > 3000 || value <= 1) {
-    value = Math.random() * 200 - 100 + lastValue
-    console.log('newValue:', value)
-  } */
-  return parseFloat(value).toFixed(0)
+clientNumber = process.env.CLIENTNUMBER
+
+if (!isNaN(clientNumber)) {
+  clientNumber = Number(clientNumber)
+  for (let i = 0; i < clientNumber; i++) {
+    let conn = createNewConnection(i, null)
+    connections.push(conn)
+  }
+  console.log(`${connections.length} connections are created`)
+} else {
+  console.log('Invalid Input')
+  process.exit(0)
 }
