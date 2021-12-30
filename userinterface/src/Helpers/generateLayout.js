@@ -1,14 +1,15 @@
 import _ from 'lodash'
-function generateLayout() {
-  return _.map(_.range(0, 25), function (item, i) {
-    var y = Math.ceil(Math.random() * 4) + 1
+function generateLayout(devices, size) {
+  return devices.map(function (item, index) {
     return {
-      x: Math.round(Math.random() * 5) * 2,
-      y: Math.floor(i / 6) * y,
+      x: (index % 5) * 2,
+      y: (index / 5) * 2,
       w: 2,
-      h: y,
-      i: i.toString(),
-      static: Math.random() < 0.05,
+      h: 2,
+      i: index.toString(),
+      minH: 2,
+      minW: 2,
+      socketUniqueNumber: item.socketUniqueNumber,
     }
   })
 }

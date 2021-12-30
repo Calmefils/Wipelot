@@ -26,6 +26,7 @@ const createNewConnection = (index, lastSent) => {
   let toSend
   ws.on('open', () => {
     heartbeat(ws)
+    console.log()
     let timer = lastSent === null ? 0 : lastSent.timestamp
     let firstValue =
       lastSent === null ? Math.random() * 2998 + 1 : lastSent.value
@@ -42,11 +43,16 @@ const createNewConnection = (index, lastSent) => {
       lastValue = newValue
       timer++
       ws.send(JSON.stringify(toSend))
+      console.log(toSend)
     }, 1000)
   })
 
   ws.on('message', (data) => {
     console.log('received: %s', data)
+    if (data == 'socketUniqueNumber') {
+      let jsonResp = { socketUniqueNumber: index }
+      ws.send(JSON.stringify(jsonResp))
+    }
   })
 
   ws.on('ping', () => {
@@ -56,8 +62,8 @@ const createNewConnection = (index, lastSent) => {
   ws.on('close', () => {
     clearInterval(interval)
     console.log(`Index: ${index} connection closed`)
-    createNewConnection(index, toSend)
-    console.log(`Index: ${index} connection reopened`)
+    //createNewConnection(index, toSend)
+    //console.log(`Index: ${index} connection reopened`)
   })
 
   ws.on('error', (err) => {

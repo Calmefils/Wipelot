@@ -1,20 +1,14 @@
+import { useEffect, useState } from 'react'
 import { push as Menu, slide as MobileMenu } from 'react-burger-menu'
 import './BurgerMenu.css'
+import ToolBox from './ToolBox'
 
 function BurgerMenu(props) {
-  function handleKeyPress(e) {
+  /*   function handleKeyPress(e) {
     e = e || window.event
     if (e.key === 'Tab' || e.keyCoda === 9) {
     }
-  }
-  function MenuList() {
-    return (
-      <>
-        {' '}
-        <h1> Selam </h1>
-      </>
-    )
-  }
+  } */
   return (
     <>
       {props.size.width > 992 && (
@@ -26,10 +20,22 @@ function BurgerMenu(props) {
           onOpen={() => props.setIsMenuOpen(true)}
           disableCloseOnEsc
           disableAutoFocus
-          noTransition
-          customOnKeyDown={handleKeyPress}
+          //customOnKeyDown={handleKeyPress}
         >
-          <MenuList />
+          <h3 style={{ paddingTop: '1rem', textAlign: 'center' }}>
+            {' '}
+            Connected Devices{' '}
+          </h3>
+          <ToolBox
+            items={props.toolbox[props.currentBreakpoint] || []}
+            toolbox={props.toolbox}
+            setToolbox={props.setToolbox}
+            currentBreakpoint={props.currentBreakpoint}
+            layouts={props.layouts}
+            setLayouts={props.setLayouts}
+            allDevices={props.allDevices}
+            handleDeselectAll={props.handleDeselectAll}
+          />
         </Menu>
       )}
       {props.size.width <= 992 && (
@@ -40,7 +46,17 @@ function BurgerMenu(props) {
           onOpen={() => props.setIsMenuOpen(true)}
           disableAutoFocus
         >
-          <MenuList />
+          <h3 style={{ paddingTop: '1rem' }}> Connected Devices </h3>
+          <ToolBox
+            items={props.toolbox[props.currentBreakpoint] || []}
+            toolbox={props.toolbox}
+            setToolbox={props.setToolbox}
+            currentBreakpoint={props.currentBreakpoint}
+            layouts={props.layouts}
+            setLayouts={props.setLayouts}
+            allDevices={props.allDevices}
+            handleDeselectAll={props.handleDeselectAll}
+          />
         </MobileMenu>
       )}
     </>

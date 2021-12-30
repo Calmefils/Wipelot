@@ -1,0 +1,23 @@
+.draggable-card-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toolbox__items {
+}
+
+.toolbox__items__item {
+  margin: 8px;
+  background-color: #eeeeee;
+  border-radius: 1rem;
+  -webkit-box-shadow: 0px 0px 13px 4px rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 0px 13px 4px rgba(255, 255, 255, 0.4);
+}
+.toolbox__items:hover {
+  cursor: pointer;
+}
+
+.noMarginBottom {
+  margin-bottom: 0;
+}
