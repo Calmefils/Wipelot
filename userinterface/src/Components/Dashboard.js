@@ -16,28 +16,43 @@ function Dashboard({
   currentTab
 }) {
   const [allDevicesData, setAllDevicesData] = useState([])
+  const [savedDevicesData, setSavedDevicesData] = useState([])
+  const [meansAndStds, setMeansAndStds] = useState([])
 
   const messageListener = (message) => {
     if (message.code === 0) {
       let tempDevicesData = [...allDevicesData]
+      let tempSavedDevicesData = [...savedDevicesData]
       message.data.forEach((data) => {
         let deviceIndex = tempDevicesData.findIndex(
           (device) => device.socketUniqueNumber === data.socketUniqueNumber
         )
-        data.id = data.socketUniqueNumber
         if (deviceIndex !== -1) {
           tempDevicesData[deviceIndex] = data
+          tempSavedDevicesData[deviceIndex].push(data.value)
         } else {
           tempDevicesData.push(data)
+          tempSavedDevicesData.push([data.value])
         }
+        console.log(tempDevicesData)
+        let [mean, std] = getStandardDeviationAndMeanu(tempSavedDevicesData[deviceIndex === -1 ? 0 : deviceIndex])
+        data.id = data.socketUniqueNumber
+        data.mean = mean.toFixed(0)
+        data.std = std.toFixed(0)
       })
-
-      //console.log(tempDevicesData)
+      setSavedDevicesData(tempSavedDevicesData)
       setAllDevicesData(tempDevicesData)
     } else if (message.code === 1) {
       setAllDevices(message.data)
     }
   }
+
+  const getStandardDeviationAndMeanu = (array) => {
+    const n = array.length
+    const mean = array.reduce((a, b) => a + b) / n
+    return [mean, Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)]
+  }
+
 
   useEffect(() => {
     socket.on('message', messageListener)
@@ -73,6 +88,7 @@ function Dashboard({
           currentBreakpoint={currentBreakpoint}
           allDevicesData={allDevicesData}
           onPutItem={onPutItem} 
+          meansAndStds={meansAndStds}
         />
       }
     </>
