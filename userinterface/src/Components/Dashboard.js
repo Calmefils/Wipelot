@@ -13,6 +13,7 @@ function Dashboard({
   setToolbox,
   currentBreakpoint,
   onPutItem,
+  currentTab
 }) {
   const [allDevicesData, setAllDevicesData] = useState([])
 
@@ -23,6 +24,7 @@ function Dashboard({
         let deviceIndex = tempDevicesData.findIndex(
           (device) => device.socketUniqueNumber === data.socketUniqueNumber
         )
+        data.id = data.socketUniqueNumber
         if (deviceIndex !== -1) {
           tempDevicesData[deviceIndex] = data
         } else {
@@ -60,13 +62,19 @@ function Dashboard({
 
   return (
     <>
-      <DraggableGridLayout
-        layouts={layouts}
-        currentBreakpoint={currentBreakpoint}
-        allDevicesData={allDevicesData}
-        onPutItem={onPutItem}
-      />
-      <Table allDevicesData={allDevicesData} />
+      {currentTab === 0 ? 
+        <DraggableGridLayout
+          layouts={layouts}
+          currentBreakpoint={currentBreakpoint}
+          allDevicesData={allDevicesData}
+          onPutItem={onPutItem}
+        /> :
+        <Table layouts={layouts}
+          currentBreakpoint={currentBreakpoint}
+          allDevicesData={allDevicesData}
+          onPutItem={onPutItem} 
+        />
+      }
     </>
   )
 }

@@ -2,10 +2,13 @@ import * as React from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
+  { field: 'id', headerName: 'ID', description: "Socket Unique Number", type:"number", width: 70 },
+  { field: 'value', headerName: 'Value', type:"number", width: 130 },
+  { field: 'timestamp', headerName: 'Timestamp', sortable: false, width: 130 },
+  { field: 'std', headerName: 'Std. Dev.', description: "Standard Deviation", type:"number", width: 130 },
+  { field: 'mean', headerName: 'Mean', type:"number", width: 130 },
+
+  /*{
     field: 'age',
     headerName: 'Age',
     type: 'number',
@@ -21,7 +24,7 @@ const columns = [
       `${params.getValue(params.id, 'firstName') || ''} ${
         params.getValue(params.id, 'lastName') || ''
       }`,
-  },
+  },*/
 ]
 
 const rows = [
@@ -36,15 +39,15 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ]
 
-export default function DataTable() {
+export default function DataTable({layouts, currentBreakpoint, allDevicesData, onPutItem }) {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGrid
-        rows={rows}
+        rows={allDevicesData}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
+        //pageSize={5}
+        //rowsPerPageOptions={[5]}
+        //checkboxSelection
       />
     </div>
   )

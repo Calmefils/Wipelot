@@ -9,6 +9,13 @@ function BurgerMenu(props) {
     if (e.key === 'Tab' || e.keyCoda === 9) {
     }
   } */
+
+  useEffect(() => {
+    if(props.size.width > 992){
+      props.setIsMenuOpen(true)
+    }
+  },[props.size])
+
   return (
     <>
       {props.size.width > 992 && (
@@ -20,6 +27,8 @@ function BurgerMenu(props) {
           onOpen={() => props.setIsMenuOpen(true)}
           disableCloseOnEsc
           disableAutoFocus
+          customBurgerIcon={ false }
+          customCrossIcon={ false }
           //customOnKeyDown={handleKeyPress}
         >
           <h3 style={{ paddingTop: '1rem', textAlign: 'center' }}>

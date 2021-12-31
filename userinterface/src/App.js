@@ -5,7 +5,9 @@ import BurgerMenu from './Components/BurgerMenu'
 import useWindowSize from './Helpers/useWindowSize'
 import io from 'socket.io-client'
 import Dashboard from './Components/Dashboard'
-import generateLayout from './Helpers/generateLayout'
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import './App.css'
 import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
@@ -19,6 +21,12 @@ function App() {
   const [layouts, setLayouts] = useState({ lg: [] })
   const [toolbox, setToolbox] = useState({ lg: [] })
   const [currentBreakpoint, setCurrentBreakpoint] = useState('lg')
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    console.log(newValue)
+    setCurrentTab(newValue);
+  };
 
   const onPutItem = (item) => {
     setToolbox((prev) => {
@@ -69,12 +77,18 @@ function App() {
       />
       <main
         id='page-wrap'
-        className={isMenuOpen === true ? 'openMenuSize' : 'closeMenuSize'}
+        className= 'openMenuSize'
       >
         <CssBaseline />
         <Container maxWidth='lg'>
           <div className='App'>
             <header className='app-header'>Wipelot Dashboard</header>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+              <Tabs value={currentTab} onChange={handleChange} centered>
+                <Tab label="Card View" />
+                <Tab label="Table View" />
+              </Tabs>
+            </Box>
             {socket ? (
               <Dashboard
                 socket={socket}
@@ -84,6 +98,7 @@ function App() {
                 setToolbox={setToolbox}
                 currentBreakpoint={currentBreakpoint}
                 onPutItem={onPutItem}
+                currentTab={currentTab}
               />
             ) : (
               <div>Not Connected</div>
