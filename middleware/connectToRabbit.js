@@ -1,5 +1,8 @@
 var amqp = require('amqplib/callback_api')
 
+//RabbitMQ server address, if this runs on docker amqp://rabbit or appropriate container name, if this runs on local machine use amqp://localhost
+const address = 'amqp://rabbit'
+
 async function connectToRabbit(dataQueue, devicesQueue, logger) {
   /**
    * Connect RabbitMQ server & consume
@@ -14,7 +17,7 @@ async function connectToRabbit(dataQueue, devicesQueue, logger) {
 
 function connect(logger) {
   return new Promise((resolve, reject) => {
-    amqp.connect('amqp://localhost', function (error0, connection) {
+    amqp.connect(address, function (error0, connection) {
       if (error0) {
         logger.log(
           'error',

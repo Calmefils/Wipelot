@@ -8,5 +8,5 @@ COPY package*.json ./
 RUN npm install
 # Copy all files
 COPY . .
-# Run the listener app
+# Run the middleware app
 CMD ["npm", "start"]

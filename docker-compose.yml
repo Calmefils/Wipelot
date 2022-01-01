@@ -1,9 +1,10 @@
-version: '0.1'
+version: '3.0'
 services:
   rabbit:
     image: 'rabbitmq:3.8-management'
     ports:
       - '15672:15672'
+      - '5672:5672'
     restart: on-failure
     healthcheck:
       timeout: 5s
@@ -15,22 +16,46 @@ services:
         - 'status'
   listener:
     build: ./listener
+    restart: always
+    links:
+      - rabbit:wipelot_rabbit
+    ports:
+      - '7000:7000'
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - 'rabbit'
+  middleware:
+    build: ./middleware
     restart: on-failure
-  #    depends_on:
-  #      rabbit:
-  #        condition: service_healthy
+    links:
+      - rabbit:wipelot_rabbit
+    ports:
+      - '3333:3333'
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - 'rabbit'
+      - 'listener'
   simulator:
     build: ./simulator
+    links:
+      - listener:wipelot_listener
     environment:
-      - CLIENTNUMBER=1
-    restart: on-failure
-  #    depends_on:
-  #      rabbit:
-  #        condition: service_healthy
-  #      listener:
-  #        condition: service_healthy
+      - CLIENTNUMBER=5
+      - NODE_ENV=production
+    restart: always
+    depends_on:
+      - 'rabbit'
+      - 'listener'
+      - 'middleware'
   userinterface:
     build: ./userinterface
     ports:
       - '3000:3000'
     restart: on-failure
+    depends_on:
+      - 'rabbit'
+      - 'listener'
+      - 'simulator'
+      - 'middleware'
