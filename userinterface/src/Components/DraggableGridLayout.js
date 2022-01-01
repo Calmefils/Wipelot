@@ -3,13 +3,17 @@ import { useState, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import IconButton from '@mui/material/IconButton'
-import generateLayout from '../Helpers/generateLayout'
+import MeanAndStdTable from './MeanAndStdTable'
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 const DraggableGridLayout = ({
+  size,
   layouts,
+  setLayouts,
   onPutItem,
   currentBreakpoint,
+  setCurrentBreakpoint,
   allDevicesData,
 }) => {
   const [compactType, setCompactType] = useState('vertical')
@@ -21,7 +25,7 @@ const DraggableGridLayout = ({
 
   return (
     <div>
-      {layouts[currentBreakpoint].length !== 0 ? 
+      {layouts?.[currentBreakpoint]?.length !== 0 ? (
         <ResponsiveReactGridLayout
           className='layout'
           breakpoints={{
@@ -33,8 +37,8 @@ const DraggableGridLayout = ({
           }}
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
           layouts={layouts}
-          //onBreakpointChange={onBreakpointChange}
-          //onLayoutChange={this.onLayoutChange}
+          //onLayoutChange={onLayoutChange}
+          width={size.width}
           // WidthProvider option
           measureBeforeMount={false}
           // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
@@ -42,6 +46,7 @@ const DraggableGridLayout = ({
           useCSSTransforms={mounted}
           compactType={compactType}
           preventCollision={!compactType}
+          onWidthChange={() => {}}
         >
           {layouts[currentBreakpoint]?.map((l) => {
             let device = allDevicesData?.find(
@@ -76,9 +81,15 @@ const DraggableGridLayout = ({
                   </div>
                   <div style={{ padding: '8px 0' }}>
                     <h6 className='noMarginBottom'>Value</h6>
-                    <p className='noMarginBottom' style={{ fontSize: '1.5rem' }}>
+                    <p
+                      className='noMarginBottom'
+                      style={{ fontSize: '1.5rem' }}
+                    >
                       {device?.value}
                     </p>
+                  </div>
+                  <div style={{ padding: '0' }}>
+                    <MeanAndStdTable device={device} />
                   </div>
                   <h6 className='noMarginBottom'>Timestamp</h6>
                   <p className='noMarginBottom'>{device?.timestamp}</p>
@@ -86,10 +97,15 @@ const DraggableGridLayout = ({
               </div>
             )
           })}
-        </ResponsiveReactGridLayout> : 
+        </ResponsiveReactGridLayout>
+      ) : (
         <div style={{ textAlign: 'center' }}>
-          <h6 style={{ margin: '1rem 0', color:"#393e46" }}> Select Devices From The Menu </h6>
-        </div>}
+          <h6 style={{ margin: '1rem 0', color: '#393e46' }}>
+            {' '}
+            Select Devices From The Menu{' '}
+          </h6>
+        </div>
+      )}
     </div>
   )
 }

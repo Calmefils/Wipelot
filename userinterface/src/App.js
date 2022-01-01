@@ -5,9 +5,9 @@ import BurgerMenu from './Components/BurgerMenu'
 import useWindowSize from './Helpers/useWindowSize'
 import io from 'socket.io-client'
 import Dashboard from './Components/Dashboard'
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 import './App.css'
 import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
@@ -21,12 +21,11 @@ function App() {
   const [layouts, setLayouts] = useState({ lg: [] })
   const [toolbox, setToolbox] = useState({ lg: [] })
   const [currentBreakpoint, setCurrentBreakpoint] = useState('lg')
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState(0)
 
   const handleChange = (event, newValue) => {
-    console.log(newValue)
-    setCurrentTab(newValue);
-  };
+    setCurrentTab(newValue)
+  }
 
   const onPutItem = (item) => {
     setToolbox((prev) => {
@@ -75,33 +74,33 @@ function App() {
         setAllDevices={setAllDevices}
         handleDeselectAll={handleDeselectAll}
       />
-      <main
-        id='page-wrap'
-        className= 'openMenuSize'
-      >
+      <main id='page-wrap'>
         <CssBaseline />
         <Container maxWidth='lg'>
           <div className='App'>
             <header className='app-header'>Wipelot Dashboard</header>
             <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
               <Tabs value={currentTab} onChange={handleChange} centered>
-                <Tab label="Card View" />
-                <Tab label="Table View" />
+                <Tab label='Card View' />
+                <Tab label='Table View' />
               </Tabs>
             </Box>
             {socket ? (
               <Dashboard
+                size={size}
                 socket={socket}
                 layouts={layouts}
+                setLayouts={setLayouts}
                 allDevices={allDevices}
                 setAllDevices={setAllDevices}
                 setToolbox={setToolbox}
                 currentBreakpoint={currentBreakpoint}
                 onPutItem={onPutItem}
                 currentTab={currentTab}
+                setCurrentBreakpoint={setCurrentBreakpoint}
               />
             ) : (
-              <div>Not Connected</div>
+              <h5>Not Connected</h5>
             )}
           </div>
         </Container>

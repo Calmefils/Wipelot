@@ -10,23 +10,6 @@ main {
   left: 16px;
 }
 
-@media screen and (min-width: 992px) {
-  .openMenuSize {
-    width: calc(100vw - 300px);
-  }
-  .closeMenuSize {
-    width: 100vw;
-  }
-}
-@media screen and (max-width: 992px) {
-  .openMenuSize {
-    width: 100vw;
-  }
-  .closeMenuSize {
-    width: 100vw;
-  }
-}
-
 .app-header {
   padding: 10px;
   background-color: #373a47;
@@ -39,13 +22,6 @@ main {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-}
-
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
 }
 
 .bm-cross-button {

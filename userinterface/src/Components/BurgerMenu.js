@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { push as Menu, slide as MobileMenu } from 'react-burger-menu'
+import { slide as Menu, slide as MobileMenu } from 'react-burger-menu'
 import './BurgerMenu.css'
 import ToolBox from './ToolBox'
 
@@ -9,12 +9,6 @@ function BurgerMenu(props) {
     if (e.key === 'Tab' || e.keyCoda === 9) {
     }
   } */
-
-  useEffect(() => {
-    if(props.size.width > 992){
-      props.setIsMenuOpen(true)
-    }
-  },[props.size])
 
   return (
     <>
@@ -27,8 +21,6 @@ function BurgerMenu(props) {
           onOpen={() => props.setIsMenuOpen(true)}
           disableCloseOnEsc
           disableAutoFocus
-          customBurgerIcon={ false }
-          customCrossIcon={ false }
           //customOnKeyDown={handleKeyPress}
         >
           <h3 style={{ paddingTop: '1rem', textAlign: 'center' }}>

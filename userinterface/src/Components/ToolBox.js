@@ -94,7 +94,9 @@ const ToolBox = ({
               flexDirection: 'column',
             }}
           >
-            <h6 style={{ marginTop: '1rem' }}>All devices are displayed</h6>
+            <h6 style={{ marginTop: '1rem', textAlign: ' center' }}>
+              All devices are displayed at <br /> Card View
+            </h6>
             <small> Looking for new devices</small>
             <Lottie
               loop
