@@ -1,15 +1,8 @@
-import { useEffect, useState } from 'react'
 import { slide as Menu, slide as MobileMenu } from 'react-burger-menu'
 import './BurgerMenu.css'
 import ToolBox from './ToolBox'
 
 function BurgerMenu(props) {
-  /*   function handleKeyPress(e) {
-    e = e || window.event
-    if (e.key === 'Tab' || e.keyCoda === 9) {
-    }
-  } */
-
   return (
     <>
       {props.size.width > 992 && (

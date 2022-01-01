@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useState, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
@@ -10,13 +9,10 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
 const DraggableGridLayout = ({
   size,
   layouts,
-  setLayouts,
   onPutItem,
   currentBreakpoint,
-  setCurrentBreakpoint,
   allDevicesData,
 }) => {
-  const [compactType, setCompactType] = useState('vertical')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -37,16 +33,11 @@ const DraggableGridLayout = ({
           }}
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
           layouts={layouts}
-          //onLayoutChange={onLayoutChange}
           width={size.width}
-          // WidthProvider option
           measureBeforeMount={false}
-          // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
-          // and set `measureBeforeMount={true}`.
           useCSSTransforms={mounted}
-          compactType={compactType}
-          preventCollision={!compactType}
-          onWidthChange={() => {}}
+          compactType='vertical'
+          preventCollision={false}
         >
           {layouts[currentBreakpoint]?.map((l) => {
             let device = allDevicesData?.find(

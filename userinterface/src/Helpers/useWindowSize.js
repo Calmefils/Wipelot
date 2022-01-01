@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+// Adding resize event listener to track width and height changes.
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
     width: undefined,

@@ -4,7 +4,7 @@ import Container from '@mui/material/Container'
 import BurgerMenu from './Components/BurgerMenu'
 import useWindowSize from './Helpers/useWindowSize'
 import io from 'socket.io-client'
-import Dashboard from './Components/Dashboard'
+import Dashboard from './Pages/Dashboard'
 import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -13,20 +13,20 @@ import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
 
 function App() {
-  const size = useWindowSize()
-  const [socket, setSocket] = useState(null)
-  const [isMenuOpen, setIsMenuOpen] = useState(true)
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [allDevices, setAllDevices] = useState([])
-  const [layouts, setLayouts] = useState({ lg: [] })
-  const [toolbox, setToolbox] = useState({ lg: [] })
-  const [currentBreakpoint, setCurrentBreakpoint] = useState('lg')
-  const [currentTab, setCurrentTab] = useState(0)
+  const size = useWindowSize() // This hook is listening page size changes, heigth and width
+  const [socket, setSocket] = useState(null) // This hook is responsible for socket connection
+  const [isMenuOpen, setIsMenuOpen] = useState(true) // Holding left hamburger menu status
+  const [allDevices, setAllDevices] = useState([]) // Holding devices data coming from socket
+  const [layouts, setLayouts] = useState({ lg: [] }) // This hook is holding locations of the card at the dashboard
+  const [toolbox, setToolbox] = useState({ lg: [] }) // This hook is holding items at the hambuger menu
+  const [currentBreakpoint, setCurrentBreakpoint] = useState('lg') // Holding current breakpoint for react grid layout
+  const [currentTab, setCurrentTab] = useState(0) // Holding selected tab, by default card view is open.
 
+  // On selected tab changed handler
   const handleChange = (event, newValue) => {
     setCurrentTab(newValue)
   }
-
+  // If some of the cards removed from the dashboard this method rearranges toolbox and layout.
   const onPutItem = (item) => {
     setToolbox((prev) => {
       return {
@@ -43,14 +43,15 @@ function App() {
       }
     })
   }
+  // On click deselect all from the menu, this clears dashboard
   const handleDeselectAll = () => {
     layouts[currentBreakpoint].forEach((item) => {
       onPutItem(item)
     })
   }
-
+  // Connecting to middleware
   useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:3000`)
+    const newSocket = io(`http://localhost:3333`)
     setSocket(newSocket)
     return () => newSocket.close()
   }, [setSocket])
@@ -62,8 +63,6 @@ function App() {
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
         size={size}
-        selectedIndex={selectedIndex}
-        setSelectedIndex={setSelectedIndex}
         socket={socket}
         toolbox={toolbox}
         setToolbox={setToolbox}
@@ -90,14 +89,12 @@ function App() {
                 size={size}
                 socket={socket}
                 layouts={layouts}
-                setLayouts={setLayouts}
                 allDevices={allDevices}
                 setAllDevices={setAllDevices}
                 setToolbox={setToolbox}
                 currentBreakpoint={currentBreakpoint}
                 onPutItem={onPutItem}
                 currentTab={currentTab}
-                setCurrentBreakpoint={setCurrentBreakpoint}
               />
             ) : (
               <h5>Not Connected</h5>

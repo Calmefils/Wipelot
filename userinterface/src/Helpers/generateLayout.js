@@ -1,4 +1,4 @@
-import _ from 'lodash'
+// Generates layout according to incoming device list
 function generateLayout(devices, size) {
   return devices.map(function (item, index) {
     return {

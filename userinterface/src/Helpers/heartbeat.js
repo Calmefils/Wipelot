@@ -1,3 +1,4 @@
+// Checks if connection is still alive
 const heartbeat = (ws) => {
   clearTimeout(ws.pingTimeout)
 
