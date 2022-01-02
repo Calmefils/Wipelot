@@ -25,6 +25,8 @@ services:
       - NODE_ENV=production
     depends_on:
       - 'rabbit'
+    volumes:
+      - ./Logs/Listener:/usr/src/app/Logs
   middleware:
     build: ./middleware
     restart: on-failure
@@ -37,6 +39,8 @@ services:
     depends_on:
       - 'rabbit'
       - 'listener'
+    volumes:
+      - ./Logs/Middleware:/usr/src/app/Logs
   simulator:
     build: ./simulator
     links:
@@ -49,6 +53,8 @@ services:
       - 'rabbit'
       - 'listener'
       - 'middleware'
+    volumes:
+      - ./Logs/Simulator:/usr/src/app/Logs
   userinterface:
     build: ./userinterface
     ports:
@@ -59,3 +65,5 @@ services:
       - 'listener'
       - 'simulator'
       - 'middleware'
+volumes:
+  Logs:
