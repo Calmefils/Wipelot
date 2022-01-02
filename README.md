@@ -28,4 +28,4 @@ Once the user connects the page, all incoming data will be saved in order to sho
 
 ### Logs
 
-Log files can be found under /usr/src/app/Logs folder for each container.
+Log files will be created at the root directory after containers are up and running.
